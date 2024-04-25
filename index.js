@@ -1,17 +1,20 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 // import connectDB from './db/connectDB.js';
-
+import authRoutes from './routes/authRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 import { connectDB } from './db/connectDB.js';
 const port = process.env.PORT || 5000;
 
 console.log(dotenv.config().parsed.PORT);
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
-import authRoutes from './routes/authRoutes.js';
 
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/messages', messageRoutes)
 
 
 app.listen(port, () => {

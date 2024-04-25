@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
         type: Object, // Store the entire userAgentInfo object
         required: false,
     }
-});
+}, {timestamps: true});
 
 const User = mongoose.model('User', userSchema);
 

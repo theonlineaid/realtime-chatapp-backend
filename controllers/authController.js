@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import parser from 'ua-parser-js';
 import bcrypt from "bcryptjs";
-import generateTokenAndSetCookies from "../utils/jonstoken.js";
+import generateTokenAndSetCookies from "../utils/jsontoken.js";
 
 // Sign up route
 export const signup = async (req, res) => {
@@ -31,11 +31,6 @@ export const signup = async (req, res) => {
         // Parse user agent string to get browser, OS, and device information
         const userAgentInfo = parser(userAgentString);
 
-        // Log the parsed user agent info
-        // console.log('Browser:', userAgentInfo.browser);
-        // console.log('Operating System:', userAgentInfo.os);
-        // console.log('Device:', userAgentInfo.device);
-
         const newUser = new User({
             fullName,
             userName,
@@ -51,6 +46,8 @@ export const signup = async (req, res) => {
 
         if (newUser) {
 
+            // Include user agent information in the response headers
+            res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
             // Generate JWT token over here
             generateTokenAndSetCookies(newUser._id, res)
 
@@ -64,14 +61,14 @@ export const signup = async (req, res) => {
                 operatingSystem: newUser.operatingSystem,
                 userAgentInfo
             });
-    
 
-          
+
+
         } else {
-            res.status(400).json({error: "Invalid user data"})
+            res.status(400).json({ error: "Invalid user data" })
         }
 
-  
+
 
     } catch (error) {
         console.log(error);
@@ -86,45 +83,50 @@ export const login = async (req, res) => {
 
     try {
 
-        const {userName, password} = req.body;
+        const { userName, password } = req.body;
 
         const user = await User.findOne({ userName });
         const isPasswordCurrect = await bcrypt.compare(password, user?.password || "")
 
-        if(!user || !isPasswordCurrect) {
-            res.status(400).json({error: "Invalid user"});
+        if (!user || !isPasswordCurrect) {
+            res.status(400).json({ error: "Invalid user" });
         }
 
 
         generateTokenAndSetCookies(user.id, res);
 
+        const userAgentString = req.headers['user-agent'];
+        const userAgentInfo = parser(userAgentString);
+
+        // Include user agent information in the response headers
+        res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
+
         res.status(200).json({
             _id: user._id,
-            fullName: user.fullName,
+            // fullName: user.fullName,
             userName: user.userName,
             gender: user.gender,
             profilePicture: user.profilePicture,
-            browser: user.browser, // Include browser info in the response
-            operatingSystem: user.operatingSystem,
-            userAgentInfo: user.userAgentInfo,
             userAgentInfo
         });
 
 
-        
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong while login" });
     }
-
-    res.send("User authenticated successfully");
 };
 
 // Logout route
-export const logout = async (req, res) => {
-    // Logic to invalidate the user's session or access token
-    // Example: invalidateSession(req.sessionId)
-    res.send("User logged out successfully");
+export const logout = (req, res) => {
+    try {
+        res.cookie('jwt', "", { maxAge: 0 })
+        // res.clearCookie('jwt');
+        res.status(200).json({ msg: "logout successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong while logout" });
+    }
 }
 
 // Forgot password route
