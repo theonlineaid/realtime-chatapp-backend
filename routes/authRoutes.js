@@ -1,16 +1,16 @@
 import express from 'express';
-import { login, logout, signup } from '../controllers/authController.js';
+import authCtrl from '../controllers/authController.js';
 
 const router = express.Router();
 
 // Sign up route
-router.post('/signup', signup);
+router.post('/signup', authCtrl.signup);
 
 // Login route
-router.post('/login', login);
+router.post('/login', authCtrl.login);
 
 // Logout route
-router.post('/logout', logout);
+router.post('/logout', authCtrl.logout);
 
 // Forgot password route
 router.post('/forgot', );
