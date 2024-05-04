@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 // import connectDB from './db/connectDB.js';
+import cors from 'cors';
 
 import authRoutes from './routes/authRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
@@ -14,6 +15,7 @@ console.log(dotenv.config().parsed.PORT);
 
 const app = express();
 app.use(express.json());
+app.use(cors())
 app.use(cookieParser());
 
 
