@@ -1,11 +1,13 @@
 import User from "../models/userModel.js";
+import generateTokenAndSetCookies from "../utils/jsontoken.js";
 
 
 const userCtrl = {
     getUsersForSidebar :  async (req, res) => {
         try {
+           
             const loggedInUserId = req.user._id;
-    
+            // generateTokenAndSetCookies(loggedInUserId, res);
             const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
     
             res.status(200).json(filteredUsers);
@@ -17,3 +19,4 @@ const userCtrl = {
 }
 
 export default userCtrl;
+

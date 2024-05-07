@@ -27,10 +27,10 @@ const authCtrl = {
             const girlProfilePicture = `https://avatar.iran.liara.run/public/girl?username=${userName}`
 
             // Extract user agent string from request headers
-            const userAgentString = req.headers['user-agent'];
+            // const userAgentString = req.headers['user-agent'];
 
             // Parse user agent string to get browser, OS, and device information
-            const userAgentInfo = parser(userAgentString);
+            // const userAgentInfo = parser(userAgentString);
 
             const newUser = new User({
                 fullName,
@@ -38,9 +38,9 @@ const authCtrl = {
                 password: hashedPassword,
                 gender,
                 profilePicture: gender === 'male' ? boyProfilePicture : girlProfilePicture,
-                browser: userAgentInfo.browser.name,
-                operatingSystem: userAgentInfo.os.name,
-                userAgentInfo
+                // browser: userAgentInfo.browser.name,
+                // operatingSystem: userAgentInfo.os.name,
+                // userAgentInfo
             });
 
             await newUser.save();
@@ -48,7 +48,7 @@ const authCtrl = {
             if (newUser) {
 
                 // Include user agent information in the response headers
-                res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
+                // res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
                 // Generate JWT token over here
                 generateTokenAndSetCookies(newUser._id, res)
 
@@ -58,9 +58,9 @@ const authCtrl = {
                     userName: newUser.userName,
                     gender: newUser.gender,
                     profilePicture: newUser.profilePicture,
-                    browser: newUser.browser, // Include browser info in the response
-                    operatingSystem: newUser.operatingSystem,
-                    userAgentInfo
+                    // browser: newUser.browser, // Include browser info in the response
+                    // operatingSystem: newUser.operatingSystem,
+                    // userAgentInfo
                 });
 
 
@@ -93,13 +93,13 @@ const authCtrl = {
             }
 
 
-            generateTokenAndSetCookies(user.id, res);
+            generateTokenAndSetCookies(user._id, res);
 
-            const userAgentString = req.headers['user-agent'];
-            const userAgentInfo = parser(userAgentString);
+            // const userAgentString = req.headers['user-agent'];
+            // const userAgentInfo = parser(userAgentString);
 
             // Include user agent information in the response headers
-            res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
+            // res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
 
             res.status(200).json({
                 _id: user._id,
@@ -107,7 +107,7 @@ const authCtrl = {
                 userName: user.userName,
                 gender: user.gender,
                 profilePicture: user.profilePicture,
-                userAgentInfo
+                // userAgentInfo
             });
 
 

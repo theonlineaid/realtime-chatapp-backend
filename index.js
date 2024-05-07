@@ -1,3 +1,4 @@
+import path from "path";
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -11,11 +12,19 @@ import userRoutes from './routes/userRoutes.js';
 import { connectDB } from './db/connectDB.js';
 const port = process.env.PORT || 5000;
 
-console.log(dotenv.config().parsed.PORT);
+
+dotenv.config({ path: '.env' });
 
 const app = express();
 app.use(express.json());
-app.use(cors())
+// Allow requests from specific origins and credentials
+const corsOptions = {
+    origin: 'http://localhost:3001',
+    credentials: true,
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 
