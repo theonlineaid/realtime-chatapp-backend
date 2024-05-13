@@ -19,7 +19,7 @@ const app = express();
 app.use(express.json());
 // Allow requests from specific origins and credentials
 const corsOptions = {
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:3000',
     credentials: true,
 };
 
