@@ -37,7 +37,7 @@ export const sendMessage = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        console.log("Error in send message controler", error);
         res.status(500).json({ error: "Something went wrong while send message" });
     }
 }
