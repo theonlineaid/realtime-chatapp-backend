@@ -43,6 +43,8 @@ const authCtrl = {
                 // userAgentInfo
             });
 
+
+
             if (newUser) {
 
                 // Include user agent information in the response headers
