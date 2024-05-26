@@ -43,14 +43,13 @@ const authCtrl = {
                 // userAgentInfo
             });
 
-            await newUser.save();
-
             if (newUser) {
 
                 // Include user agent information in the response headers
                 // res.setHeader('X-User-Agent', JSON.stringify(userAgentInfo));
                 // Generate JWT token over here
                 generateTokenAndSetCookies(newUser._id, res)
+                await newUser.save();
 
                 res.status(201).json({
                     _id: newUser._id,
@@ -86,9 +85,9 @@ const authCtrl = {
             const { userName, password } = req.body;
 
             const user = await User.findOne({ userName });
-            const isPasswordCurrect = await bcrypt.compare(password, user?.password || "")
+            const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
 
-            if (!user || !isPasswordCurrect) {
+            if (!user || !isPasswordCorrect) {
                 res.status(400).json({ error: "Invalid user" });
             }
 
