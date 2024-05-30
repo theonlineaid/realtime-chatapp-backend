@@ -10,30 +10,29 @@ import messageRoutes from './routes/messageRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 import { connectDB } from './db/connectDB.js';
+import { app, server } from "./socket/socket.js";
 const port = process.env.PORT || 5000;
 
-
-dotenv.config({ path: '.env' });
-
-const app = express();
-app.use(express.json());
 // Allow requests from specific origins and credentials
 const corsOptions = {
     origin: 'http://localhost:7000',
     credentials: true,
 };
 
+dotenv.config({ path: '.env' });
+
+app.use(express.json());
 // Use CORS middleware
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-
+// Api Route                      
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/messages', messageRoutes)
 app.use('/api/v1/users', userRoutes)
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     connectDB();
     console.log(port, "running...")
 });
